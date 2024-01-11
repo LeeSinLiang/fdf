@@ -1,82 +1,121 @@
 #include "fdf.h"
 
-void draw_line(t_fdf *fdf, int x0, int y0, int x1, int y1, int color)
+void swap(double *a, double *b)
 {
-    int dx = abs(x1 - x0);
-    int dy = abs(y1 - y0);
-    int sx = (x0 < x1) ? 1 : -1;
-    int sy = (y0 < y1) ? 1 : -1;
-    int err = dx - dy;
-    int e2;
-    int x = x0;
-    int y = y0;
-
-    while (1)
-    {
-        int intensity = 255 * (err / (float)dx);
-        int pixel_color = color + (intensity << 24);
-
-		// Write color value byte-by-byte into the pixel array
-		*(int *)(fdf->buffer + (y * WIDTH + x) * (fdf->bpp / 8)) = pixel_color;
-
-        if (x == x1 && y == y1)
-            break;
-
-        e2 = 2 * err;
-        if (e2 > -dy)
-        {
-            err -= dy;
-            x += sx;
-        }
-        if (e2 < dx)
-        {
-            err += dx;
-            y += sy;
-        }
-    }
+    double tmp = *a;
+    *a = *b;
+    *b = tmp;
 }
 
-void calculation(t_fdf *fdf, int custom_color)
+void	fill_img(t_fdf *fdf, int x, int y, double a)
 {
-    int x, y;
-    int center_x = fdf->start_x;
-    int center_y = fdf->start_y;
+	char	*color;
+	int		alpha;
+	int		red;
+	int		green;
+	int		blue;
 
-    y = 0;
-    printf("Draw scale: %d\n", fdf->scale);
-    set_background(fdf, 0x000000);
-    while (y < fdf->height)
-    {
-        x = 0;
-        while (x < fdf->width)
-        {
-            if (custom_color != 0)
-                custom_color = fdf->map[y][x].color;
-            // Center and scale the coordinates
-            int x0 = center_x + (x - fdf->width / 2) * fdf->scale;
-            int y0 = center_y + (y - fdf->height / 2) * fdf->scale;
-
-            if (x < fdf->width - 1)
-            {
-                int x1 = center_x + (x + 1 - fdf->width / 2) * fdf->scale;
-                int y1 = center_y + (y - fdf->height / 2) * fdf->scale;
-                draw_line(fdf, x0, y0, x1, y1, custom_color);
-            }
-            if (y < fdf->height - 1)
-            {
-                int x2 = center_x + (x - fdf->width / 2) * fdf->scale;
-                int y2 = center_y + (y + 1 - fdf->height / 2) * fdf->scale;
-                draw_line(fdf, x0, y0, x2, y2, custom_color);
-            }
-            x++;
-        }
-        y++;
-    }
-    printf("MLX: %p WIN: %p, img: %p\n", fdf->mlx, fdf->win, fdf->img);
-    mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
+	if (a == 0)
+		return ;
+	if ((y * WIDTH + x) * 4 - 1 < 0 ||
+		(y * WIDTH + x) * 4 - 1 > HEIGHT * WIDTH * 4)
+		return ;
+	color = fdf->buffer[(y * WIDTH + x) * 4 - 1];
+	alpha = 255 * a;
+	red = 255;
+	green = 255;
+	blue = 255;
+	*color++ = alpha;
+	*color++ = red;
+	*color++ = green;
+	*color = blue;
 }
 
-void draw(t_fdf *fdf)
+double frc_part(double nbr)
 {
-    calculation(fdf, 1);
+    return (ceil(nbr) - nbr);
+}
+
+void	swap(double *a, double *b)
+{
+	int tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+double	frc_part(double nbr)
+{
+	return (ceil(nbr) - nbr);
+}
+
+void	draw_w_slope(t_fdf *fdf, double x, double y)
+{
+	if (fdf->slope >= 0)
+	{
+		fill_img(fdf, floor(x), y, 1 - frc_part(y));
+		fill_img(fdf, floor(x) + 1, y, frc_part(y));
+	}
+	else if (fdf->slope < 0)
+	{
+		fill_img(fdf, floor(x), y, 1 - frc_part(y));
+		fill_img(fdf, floor(x) - 1, y, frc_part(y));
+	}
+}
+
+void	draw_btw_dots(t_fdf *fdf, t_vector p1, t_vector p2)
+{
+	while (p1.x <= p2.x)
+	{
+		if (fdf->steep)
+			draw_w_slope(fdf, p1.y, p1.x);
+		else
+			draw_w_slope(fdf, p1.x, p1.y);
+		p1.y += fdf->slope;
+		p1.x++;
+	}
+}
+
+void	draw_line(t_fdf *fdf, t_vector p1, t_vector p2)
+{
+	double	dx;
+	double	dy;
+
+	fdf->steep = fabs(p1.y - p2.y) > fabs(p1.x - p2.x) ? 1 : 0;
+	if (fdf->steep)
+	{
+		swap(&p1.x, &p1.y);
+		swap(&p2.x, &p2.y);
+	}
+	if (p2.x < p1.x)
+	{
+		swap(&p1.x, &p2.x);
+		swap(&p1.y, &p2.y);
+	}
+	dx = p2.x - p1.x;
+	dy = p2.y - p1.y;
+	fdf->slope = dx == 0 ? 1 : dy / dx;
+	draw_btw_dots(fdf, p1, p2);
+}
+
+void	draw(t_fdf *fdf)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < fdf->row)
+	{
+		j = 0;
+		while (j < fdf->col)
+		{
+			if (i < fdf->row - 1)
+				draw_line(fdf, fdf->vector[i][j], fdf->vector[i + 1][j]);
+			if (j < fdf->col - 1)
+				draw_line(fdf, fdf->vector[i][j], fdf->vector[i][j + 1]);
+			j++;
+		}
+		i++;
+	}
 }

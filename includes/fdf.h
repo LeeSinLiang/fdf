@@ -6,7 +6,7 @@
 /*   By: sinlee <sinlee@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:00:23 by sinlee            #+#    #+#             */
-/*   Updated: 2024/01/11 20:26:54 by sinlee           ###   ########.fr       */
+/*   Updated: 2024/01/11 20:51:01 by sinlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,14 @@ typedef struct s_vars {
 	void	*win;
 }	t_vars;
 
+typedef struct	s_vector
+{
+	double		x;
+	double		y;
+	double		z;
+	int			c;
+}				t_vector;
+
 typedef struct s_fdf
 {
 	void	*mlx;
@@ -54,18 +62,26 @@ typedef struct s_fdf
 	int		bpp;
 	int		lines;
 	int		endian;
-	int		start_x;
-	int		start_y;
 	t_point	**map;
 	int		width;
 	int		height;
+
 	int		scale;
+	int		start_x;
+	int		start_y;
 	int		offset_x;
 	int		offset_y;
+
+	int		steep;
+	double		slope;
+
+	int		row;
+	int		col;
+	t_vector	**vector;
 }			t_fdf;
 
 void draw(t_fdf *fdf);
-void		draw_line(t_fdf *fdf, int x0, int y0, int x1, int y1, int color);
+
 
 void	set_color(char *buffer, int endian, int color, int alpha);
 bool set_background(t_fdf *fdf, int color);
