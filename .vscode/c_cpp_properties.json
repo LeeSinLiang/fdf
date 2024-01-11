@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/lib/mlx_linux",
+                "${workspaceFolder}/lib/ft_printf/inc",
+                "${workspaceFolder}/lib/libft/inc",
+                "${workspaceFolder}/lib/libft/includes",
+                "${workspaceFolder}/lib/ft_printf/libft/includes",
+                "${workspaceFolder}/includes"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
