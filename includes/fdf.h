@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sinlee <sinlee@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*   By: sinlee <sinlee@student42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:00:23 by sinlee            #+#    #+#             */
-/*   Updated: 2024/01/20 15:44:00 by sinlee           ###   ########.fr       */
+/*   Updated: 2024/01/20 16:34:56 by sinlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,12 @@
 
 # define PI 3.14159265359
 # define ISO_ANGLE 0.523599
-# define WIDTH 1200
-# define HEIGHT 1200
+# define WIDTH 1920
+# define HEIGHT 1080
 # define MENU_WIDTH 250
+
+
+// FUCK 42 MAC
 
 typedef struct s_point
 {

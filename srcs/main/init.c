@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sinlee <sinlee@student.42kl.edu.my>        +#+  +:+       +#+        */
+/*   By: sinlee <sinlee@student42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 12:30:59 by sinlee            #+#    #+#             */
-/*   Updated: 2024/01/20 14:46:37 by sinlee           ###   ########.fr       */
+/*   Updated: 2024/01/20 16:35:47 by sinlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	setup_mlx(t_fdf *fdf)
 {
 	fdf->window = malloc(sizeof(t_window));
 	fdf->mlx = mlx_init();
-	mlx_get_screen_size(fdf->mlx, &fdf->window->width, &fdf->window->height);
-	ft_printf("Screen size: %d x %d\n", fdf->window->width, 
+	// mlx_get_screen_size(fdf->mlx, &fdf->window->width, &fdf->window->height);
+	fdf->window->width = WIDTH;
+	fdf->window->height = HEIGHT;
+	ft_printf("Screen size: %d x %d\n", fdf->window->width,
 		fdf->window->height);
 	fdf->win = mlx_new_window(fdf->mlx, fdf->window->width, fdf->window->height,
 			"FDF");

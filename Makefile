@@ -3,17 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sinlee <sinlee@student.42kl.edu.my>        +#+  +:+       +#+         #
+#    By: sinlee <sinlee@student42.fr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/15 06:55:38 by codespace         #+#    #+#              #
-#    Updated: 2024/01/20 15:00:08 by sinlee           ###   ########.fr        #
+#    Updated: 2024/01/20 16:22:17 by sinlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compiler
 CC = gcc
 CFLAGS = -fsanitize=address -ggdb
-INCLUDES = -Iincludes -Ilib/ft_printf/inc -Ilib/ft_printf/libft/includes -I/usr/include -Ilib/mlx_linux -O3
+# INCLUDES = -Iincludes -Ilib/ft_printf/inc -Ilib/ft_printf/libft/includes -I/usr/include -Ilib/mlx_linux -O3
+INCLUDES = -Iincludes -Ilib/ft_printf/inc -Ilib/ft_printf/libft/includes -I/usr/include -Ilib/mlx
 
 # Source files
 SRCS_DIR = srcs
@@ -40,11 +41,13 @@ OBJS = $(addprefix $(OBJS_DIR)/,$(OBJS_FILES))
 PRINTF_DIR = lib/ft_printf
 PRINTF = $(PRINTF_DIR)/libftprintf.a
 
-MLX_DIR = lib/mlx_linux
+# MLX_DIR = lib/mlx_linux
+MLX_DIR = lib/mlx
 MLX = $(MLX_DIR)/libmlx.a
 
 
-MLX_FLAGS = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+# MLX_FLAGS = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+MLX_FLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
 LIBS = -L$(PRINTF_DIR) -lftprintf -lreadline
 
 # Binary
